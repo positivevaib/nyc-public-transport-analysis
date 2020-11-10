@@ -61,7 +61,7 @@ public class CleanMapper extends Mapper<LongWritable, Text, Text, Text> {
                 doWrite = false;
 
             int gender = Integer.parseInt(line[14].replaceAll("\"", ""));
-            if (gender != 0 && gender != 1)
+            if (gender != 0 && gender != 1 && gender != 2)
                 doWrite = false;
 
             if (doWrite)
