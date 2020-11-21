@@ -48,6 +48,15 @@ public class CleanMapper extends Mapper<LongWritable, Text, Text, Text> {
             else if ((startMonth % 2 != 0 && startDay > 30) || (startMonth % 2 == 0 && startDay > 31))
                 doWrite = false;
 
+            int stationId = Integer.parseInt(line[3].replaceAll("\"", ""));
+            if (stationId <= 0)
+                doWrite = false;
+
+            double latitude = Double.parseDouble(line[5].replaceAll("\"", ""));
+            double longitude = Double.parseDouble(line[6].replaceAll("\"", ""));
+            if (latitude < 40.69 || latitude > 40.82 || longitude < -74.01 || longitude > -73.9)
+                doWrite = false;
+
             String userType = line[12].replaceAll("\"", "").toLowerCase();
             if (userType.equals("subscriber"))
                 userType = "0";
@@ -65,7 +74,7 @@ public class CleanMapper extends Mapper<LongWritable, Text, Text, Text> {
                 doWrite = false;
 
             if (doWrite)
-                context.write(new Text(startYear + ""), new Text(tripDuration + "," + startYear + "," + startMonth + "," + startDay + "," + startHour + "," + userType + "," + birthYear + "," + gender));
+                context.write(new Text(startYear + ""), new Text(tripDuration + "," + startYear + "," + startMonth + "," + startDay + "," + startHour + "," + stationId + "," + latitude + "," + longitude + "," + userType + "," + birthYear + "," + gender));
         }
         catch(Exception e) {}
     }
