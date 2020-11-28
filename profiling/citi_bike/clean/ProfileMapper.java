@@ -11,11 +11,12 @@ public class ProfileMapper extends Mapper<LongWritable, Text, Text, IntWritable>
     public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         String[] line = value.toString().trim().split(",");
 
-        String startYear = line[1];
-        String startMonth = line[2];
-        String startDay = line[3];
-        String startHour = line[4];
-        String stationId = line[5];
+        String startYear = line[0];
+        String startMonth = line[1];
+        String startDay = line[2];
+        String startHour = line[3];
+        String stationId = line[4];
+        String gridId = line[7];
         String userType = line[8];
         String birthYear = line[9];
         String gender = line[10];
@@ -26,6 +27,7 @@ public class ProfileMapper extends Mapper<LongWritable, Text, Text, IntWritable>
         context.write(new Text("startDay: " + startDay), new IntWritable(1));
         context.write(new Text("startHour: " + startHour), new IntWritable(1));
         context.write(new Text("stationId: " + stationId), new IntWritable(1));
+        context.write(new Text("gridId: " + stationId), new IntWritable(1));
         context.write(new Text("userType: " + userType), new IntWritable(1));
         context.write(new Text("birthYear: " + birthYear), new IntWritable(1));
         context.write(new Text("gender: " + gender), new IntWritable(1));

@@ -12,10 +12,6 @@ public class CleanMapper extends Mapper<LongWritable, Text, Text, Text> {
     
         boolean doWrite = true;
         try {
-            int tripDuration = Integer.parseInt(line[0].replaceAll("\"", "")); 
-            if (tripDuration < 0)
-                doWrite = false;
-
             String startTime = line[1].replaceAll("\"", "").toLowerCase();
             
             String date = startTime.split("\\s+")[0];
@@ -57,6 +53,10 @@ public class CleanMapper extends Mapper<LongWritable, Text, Text, Text> {
             if (latitude < 40.69 || latitude > 40.82 || longitude < -74.01 || longitude > -73.9)
                 doWrite = false;
 
+            int gridRow = (int)((latitude - 40.69)/0.003);
+            int gridCol = (int)((longitude - (-74.01))/0.003);
+            String gridId = gridRow + "_" + gridCol;
+
             String userType = line[12].replaceAll("\"", "").toLowerCase();
             if (userType.equals("subscriber"))
                 userType = "0";
@@ -74,7 +74,7 @@ public class CleanMapper extends Mapper<LongWritable, Text, Text, Text> {
                 doWrite = false;
 
             if (doWrite)
-                context.write(new Text(startYear + ""), new Text(tripDuration + "," + startYear + "," + startMonth + "," + startDay + "," + startHour + "," + stationId + "," + latitude + "," + longitude + "," + userType + "," + birthYear + "," + gender));
+                context.write(new Text(startYear + ""), new Text("placeholder" + "," + startYear + "," + startMonth + "," + startDay + "," + startHour + "," + stationId + "," + latitude + "," + longitude + "," + gridId + "," + userType + "," + birthYear + "," + gender));
         }
         catch(Exception e) {}
     }
