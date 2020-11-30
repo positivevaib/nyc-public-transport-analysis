@@ -1,4 +1,0 @@
-create external table bike_staging (placeholder string, startyear int, startmonth int, startday int, starthour int, stationid int, latitude double, longitude double, gridid string, usertype int, birthyear int, gender int) row format delimited fields terminated by ',' location '/user/vag273/rbda_proj/bike_clean';
-create table bike (startyear int, startmonth int, gridid string);
-insert overwrite table bike select startyear, startmonth, gridid from bike_staging;
-insert overwrite local directory '/user/vag273/rbda_proj/hive/year/2015' row format delimited fields terminated by ',' select * from bike where startyear = 2015;
