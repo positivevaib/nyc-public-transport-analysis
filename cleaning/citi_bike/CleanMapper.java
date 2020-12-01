@@ -50,7 +50,7 @@ public class CleanMapper extends Mapper<LongWritable, Text, Text, Text> {
 
             double latitude = Double.parseDouble(line[5].replaceAll("\"", ""));
             double longitude = Double.parseDouble(line[6].replaceAll("\"", ""));
-            if (latitude < 40.69 || latitude > 40.82 || longitude < -74.01 || longitude > -73.9)
+            if (latitude < 40.69 || latitude > 40.82 || longitude < -74.02 || longitude > -73.9)
                 doWrite = false;
 
             int gridRow = (int)((latitude - 40.69)/0.003);
