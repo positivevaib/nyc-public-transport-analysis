@@ -17,7 +17,7 @@ public class CleanMapper extends Mapper<LongWritable, Text, Text, Text> {
             String date = startTime.split("\\s+")[0];
             String time = startTime.split("\\s+")[1];
 
-            Integer startHour = Integer.parseInt(time.split(":")[0]);
+            Integer startHour = (Integer.parseInt(time.split(":")[0])/4) * 4;
 
             if (startHour < 0 || startHour > 23)
                 doWrite = false;
@@ -53,9 +53,19 @@ public class CleanMapper extends Mapper<LongWritable, Text, Text, Text> {
             if (latitude < 40.69 || latitude > 40.82 || longitude < -74.02 || longitude > -73.9)
                 doWrite = false;
 
-            int gridRow = (int)((latitude - 40.69)/0.003);
-            int gridCol = (int)((longitude - (-74.01))/0.003);
-            String gridId = gridRow + "_" + gridCol;
+            int gridId;
+            if (latitude > 40.7031731656 && latitude < 40.7113354232 && longitude > -74.0090959591 && longitude < -74.0024602764)
+                gridId = 87;
+            else if (latitude > 40.724272 && latitude < 40.732949 && longitude > -74.002849 && longitude < -73.991463)
+                gridId = 114;
+            else if (latitude > 40.7343701499 && latitude < 40.7460750268 && longitude > -73.9978828447 && longitude < -73.984042023)
+                gridId = 234;
+            else if (latitude > 40.772905 && latitude < 40.787938 && longitude > -73.96741 && longitude < -73.949289)
+                gridId = 236;
+            else if (latitude > 40.777528 && latitude < 40.789407 && longitude > -73.98883 && longitude < -73.969199)
+                gridId = 239;
+            else
+                gridId = 0;
 
             String userType = line[12].replaceAll("\"", "").toLowerCase();
             if (userType.equals("subscriber"))

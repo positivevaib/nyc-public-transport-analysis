@@ -1,3 +1,5 @@
- select startyear, count(*) from bike_staging where (startyear >= 2015 and startyear <= 2019) group by startyear;
- select startmonth, count(*) from bike_staging where (startyear >= 2015 and startyear <= 2019) group by startmonth;
- select startyear, startmonth, count(*) from bike_staging where (startyear >= 2015 and startyear <= 2019) group by startyear, startmonth;
+-- Manhattan level data
+select startyear, startmonth, starthour, count(*) from bike_main group by startyear, startmonth, starthour;
+
+-- Neighborhood level data
+select startyear, startmonth, starthour, gridid, count(*) from bike_main where (gridid = 87 or gridid = 114 or gridid = 234 or gridid = 236 or gridid = 239) group by startyear, startmonth, starthour, gridid;

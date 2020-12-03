@@ -1,13 +1,13 @@
-create external table bike_staging (placeholder string, startyear int, startmonth int, startday int, starthour int, stationid int, latitude double, longitude double, gridid string, usertype int, birthyear int, gender int) row format delimited fields terminated by ',' location '/user/vag273/rbda_proj/bike_clean';
+create external table bike_staging (placeholder string, startyear int, startmonth int, startday int, starthour int, stationid int, latitude double, longitude double, gridid int, usertype int, birthyear int, gender int) row format delimited fields terminated by ',' location '/user/vag273/rbda_proj/bike_clean';
 
-create table bike_main (startyear int, startmonth int, gridid string, count bigint);
-insert overwrite table bike_main select startyear, startmonth, gridid, count(*) from bike_staging where (startyear >= 2015 and startyear <= 2019) group by startyear, startmonth, gridid;
+create table bike_main (startyear int, startmonth int, starthour int, gridid int);
+insert overwrite table bike_main select startyear, startmonth, starthour, gridid from bike_staging where (startyear >= 2015 and startyear <= 2019);
 
-SET hive.exec.dynamic.partition=true;
-SET hive.exec.dynamic.partition.mode=nonstrict;
-
-create table bike_partitioned (gridid string, count bigint) partitioned by (startyear int, startmonth int);
-insert into table bike_partitioned partition(startyear, startmonth) select gridid, count, startyear, startmonth from bike_main;
+-- if need to create partitioned tables
+-- SET hive.exec.dynamic.partition=true;
+-- SET hive.exec.dynamic.partition.mode=nonstrict;
+-- create table bike_partitioned (gridid string, count bigint) partitioned by (startyear int, startmonth int);
+-- insert into table bike_partitioned partition(startyear, startmonth) select gridid, count, startyear, startmonth from bike_main;
 
 -- if need to create separate partitioned tables for years and months
 -- create table bike_years (startmonth int, gridid string, count bigint) partitioned by (startyear int);
