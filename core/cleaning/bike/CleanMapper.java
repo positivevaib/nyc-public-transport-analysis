@@ -50,22 +50,26 @@ public class CleanMapper extends Mapper<LongWritable, Text, Text, Text> {
 
             double latitude = Double.parseDouble(line[5].replaceAll("\"", ""));
             double longitude = Double.parseDouble(line[6].replaceAll("\"", ""));
-            if (latitude < 40.69 || latitude > 40.82 || longitude < -74.02 || longitude > -73.9)
+            if (latitude < 40.69715 || latitude > 40.862752 || longitude < -74.022208 || longitude > -73.924361)
                 doWrite = false;
 
-            int gridId;
-            if (latitude > 40.7031731656 && latitude < 40.7113354232 && longitude > -74.0090959591 && longitude < -74.0024602764)
-                gridId = 87;
-            else if (latitude > 40.724272 && latitude < 40.732949 && longitude > -74.002849 && longitude < -73.991463)
-                gridId = 114;
-            else if (latitude > 40.7343701499 && latitude < 40.7460750268 && longitude > -73.9978828447 && longitude < -73.984042023)
-                gridId = 234;
-            else if (latitude > 40.772905 && latitude < 40.787938 && longitude > -73.96741 && longitude < -73.949289)
-                gridId = 236;
-            else if (latitude > 40.777528 && latitude < 40.789407 && longitude > -73.98883 && longitude < -73.969199)
-                gridId = 239;
-            else
-                gridId = 0;
+            double[][] coordinates = {{-74.0090959591, 40.7031731656, -74.0024602764, 40.7113354232, 87},
+                                      {-74.002849, 40.724272, -73.991463, 40.732949, 114},
+                                      {-73.9978828447, 40.7343701499, -73.984042023, 40.7460750268, 234},
+                                      {-73.96741, 40.772905, -73.949289, 40.787938, 236},
+                                      {-73.98883, 40.777528, -73.969199, 40.789407, 239},
+                                      {-73.955741, 40.782909, -73.9356, 40.798096, 75},
+                                      {-73.992688, 40.72149, -73.977956, 40.734541, 79},
+                                      {-73.993468, 40.749782, -73.984087, 40.757252, 100},
+                                      {-73.984297, 40.760304, -73.971339, 40.767774, 163},
+                                      {-73.970537, 40.801094, -73.950625, 40.817901, 166}}
+
+            int gridId = 0;
+            for (int i = 0; i < coordinates.length; i++)
+                if (latitude > coordinates[i][1] && latitude < coordinate[i][3] && longitude > coordinate[i][0] && longitude < coordinate[i][2]) {
+                    gridId = coordinate[i][4];
+                    break;
+                }
 
             String userType = line[12].replaceAll("\"", "").toLowerCase();
             if (userType.equals("subscriber"))
