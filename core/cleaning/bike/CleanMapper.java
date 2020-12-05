@@ -62,12 +62,12 @@ public class CleanMapper extends Mapper<LongWritable, Text, Text, Text> {
                                       {-73.992688, 40.72149, -73.977956, 40.734541, 79},
                                       {-73.993468, 40.749782, -73.984087, 40.757252, 100},
                                       {-73.984297, 40.760304, -73.971339, 40.767774, 163},
-                                      {-73.970537, 40.801094, -73.950625, 40.817901, 166}}
+                                      {-73.970537, 40.801094, -73.950625, 40.817901, 166}};
 
             int gridId = 0;
             for (int i = 0; i < coordinates.length; i++)
-                if (latitude > coordinates[i][1] && latitude < coordinate[i][3] && longitude > coordinate[i][0] && longitude < coordinate[i][2]) {
-                    gridId = coordinate[i][4];
+                if (latitude > coordinates[i][1] && latitude < coordinates[i][3] && longitude > coordinates[i][0] && longitude < coordinates[i][2]) {
+                    gridId = (int)coordinates[i][4];
                     break;
                 }
 
