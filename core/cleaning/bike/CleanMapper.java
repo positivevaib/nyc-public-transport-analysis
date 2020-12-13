@@ -48,29 +48,26 @@ public class CleanMapper extends Mapper<LongWritable, Text, Text, Text> {
             if (stationId <= 0)
                 doWrite = false;
 
-            double latitude = Double.parseDouble(line[5].replaceAll("\"", ""));
-            double longitude = Double.parseDouble(line[6].replaceAll("\"", ""));
-            if (latitude < 40.69715 || latitude > 40.862752 || longitude < -74.022208 || longitude > -73.924361)
+            double startLatitude = Double.parseDouble(line[5].replaceAll("\"", ""));
+            double startLongitude = Double.parseDouble(line[6].replaceAll("\"", ""));
+            if (startLatitude < 40.69715 || startLatitude > 40.862752 || startLongitude < -74.022208 || startLongitude > -73.924361)
                 doWrite = false;
 
-            double[][] coordinates = {{-74.0090959591, 40.7031731656, -74.0024602764, 40.7113354232, 87},
-                                      {-74.002849, 40.724272, -73.991463, 40.732949, 114},
-                                      {-73.9978828447, 40.7343701499, -73.984042023, 40.7460750268, 234},
-                                      {-73.96741, 40.772905, -73.949289, 40.787938, 236},
-                                      {-73.98883, 40.777528, -73.969199, 40.789407, 239},
-                                      {-73.955741, 40.782909, -73.9356, 40.798096, 75},
-                                      {-73.992688, 40.72149, -73.977956, 40.734541, 79},
-                                      {-73.993468, 40.749782, -73.984087, 40.757252, 100},
-                                      {-73.984297, 40.760304, -73.971339, 40.767774, 163},
-                                      {-73.970537, 40.801094, -73.950625, 40.817901, 166}};
+            int startGridRow = (int)((startLatitude - 40.69715)/0.003);
+            int startGridCol = (int)((startLongitude - (-74.022208))/0.003);
+            String startGridId = startGridRow + "_" + startGridCol;
 
-            int gridId = 0;
-            for (int i = 0; i < coordinates.length; i++)
-                if (latitude > coordinates[i][1] && latitude < coordinates[i][3] && longitude > coordinates[i][0] && longitude < coordinates[i][2]) {
-                    gridId = (int)coordinates[i][4];
-                    break;
-                }
-
+            String endGridId;
+            double endLatitude = Double.parseDouble(line[9].replaceAll("\"", ""));
+            double endLongitude = Double.parseDouble(line[10].replaceAll("\"", ""));
+            if (endLatitude < 40.69715 || endLatitude > 40.862752 || endLongitude < -74.022208 || endLongitude > -73.924361)
+                endGridId = "0";
+            else {
+                int endGridRow = (int)((endLatitude - 40.69715)/0.003);
+                int endGridCol = (int)((endLongitude - (-74.022208))/0.003);
+                endGridId = endGridRow + "_" + endGridCol;
+            }
+            
             String userType = line[12].replaceAll("\"", "").toLowerCase();
             if (userType.equals("subscriber"))
                 userType = "0";
@@ -88,7 +85,7 @@ public class CleanMapper extends Mapper<LongWritable, Text, Text, Text> {
                 doWrite = false;
 
             if (doWrite)
-                context.write(new Text(startYear + ""), new Text("placeholder" + "," + startYear + "," + startMonth + "," + startDay + "," + startHour + "," + stationId + "," + latitude + "," + longitude + "," + gridId + "," + userType + "," + birthYear + "," + gender));
+                context.write(new Text(startYear + ""), new Text("placeholder" + "," + startYear + "," + startMonth + "," + startDay + "," + startHour + "," + stationId + "," + startLatitude + "," + startLongitude + "," + startGridId + "," + userType + "," + birthYear + "," + gender + "," + endLatitude + "," + endLongitude + "," + endGridId));
         }
         catch(Exception e) {}
     }
