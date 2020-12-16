@@ -9,14 +9,6 @@ import org.apache.spark.sql.types.IntegerType
 import org.apache.spark.sql.types.LongType
 
 object Analytics {
-  def encode(line: String): Array[Long] = {
-    var lSplit = line.split(',')
-    var out = Array(lSplit(0).toLong, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, lSplit(2).toLong)
-    out(lSplit(1).toInt) = 1
-
-    return out
-  }
-
   def main(args: Array[String]) {
     val sc = new SparkContext()
     val sqlCtx = new SQLContext(sc)
@@ -51,22 +43,188 @@ object Analytics {
 
     val joinDF = castBDF.join(castTDF, castBDF("byear") === castTDF("tyear") && castBDF("bmonth") === castTDF("tmonth") && castBDF("bzone") === castTDF("tzone"), "full").na.drop(Seq("tyear")).drop("byear", "bmonth", "bzone").na.fill(0)
 
-    // Linear Regression
-    var lrRDD = joinDF.rdd.map(line => encode(line(0) + "," + line(2) + "," + line(4)))
+    // Linear Regression - Jan
+    println("Regression - January")
 
-    val lrHeader = Seq("bcount", "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec", "ijan", "ifeb", "imar", "iapr", "imay", "ijun", "ijul", "iaug", "isep", "ioct", "inov", "idec", "tcount")
-    var lrDF = lrRDD.map(line => Seq(line(0), line(1), line(2), line(3), line(4), line(5), line(6), line(7), line(8), line(9), line(10), line(11), line(12), line(1)*line(0), line(2)*line(0), line(3)*line(0), line(4)*line(0), line(5)*line(0), line(6)*line(0), line(7)*line(0), line(8)*line(0), line(9)*line(0), line(10)*line(0), line(11)*line(0), line(12)*line(0), line(13))).toDF(lrHeader: _*)
+    var lrRDD = joinDF.rdd.filter(line => line(2) == 1).map(line => line.toString.substring(1, line.toString.length - 1).split(',')).map(line => (line(0).toLong, line(4).toLong))
+
+    var lrDF = lrRDD.toDF("bcount", "tcount")
     
-    val cols = Array("bcount", "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec", "ijan", "ifeb", "imar", "iapr", "imay", "ijun", "ijul", "iaug", "isep", "ioct", "inov", "idec")
+    val cols = Array("bcount")
     val assembler = new VectorAssembler().setInputCols(cols).setOutputCol("features")
     var featuresDF = assembler.transform(lrDF)
 
     val lr = new LinearRegression().setFeaturesCol("features").setLabelCol("tcount")
 
     var lrModel = lr.fit(featuresDF)
-    lrModel.write.overwrite().save("/user/vag273/rbda_proj/lr_overall")
+    lrModel.write.overwrite().save("/user/vag273/rbda_proj/lr_jan")
 
     var trainSummary = lrModel.summary
+    println("R2: " + trainSummary.r2)
+
+    // Linear Regression - Feb
+    println("Regression - February")
+
+    lrRDD = joinDF.rdd.filter(line => line(2) == 2).map(line => line.toString.substring(1, line.toString.length - 1).split(',')).map(line => (line(0).toLong, line(4).toLong))
+
+    lrDF = lrRDD.toDF("bcount", "tcount")
+    
+    featuresDF = assembler.transform(lrDF)
+
+    lrModel = lr.fit(featuresDF)
+    lrModel.write.overwrite().save("/user/vag273/rbda_proj/lr_feb")
+
+    trainSummary = lrModel.summary
+    println("R2: " + trainSummary.r2)
+
+    // Linear Regression - Mar
+    println("Regression - March")
+
+    lrRDD = joinDF.rdd.filter(line => line(2) == 3).map(line => line.toString.substring(1, line.toString.length - 1).split(',')).map(line => (line(0).toLong, line(4).toLong))
+
+    lrDF = lrRDD.toDF("bcount", "tcount")
+    
+    featuresDF = assembler.transform(lrDF)
+
+    lrModel = lr.fit(featuresDF)
+    lrModel.write.overwrite().save("/user/vag273/rbda_proj/lr_mar")
+
+    trainSummary = lrModel.summary
+    println("R2: " + trainSummary.r2)
+
+    // Linear Regression - Apr
+    println("Regression - April")
+
+    lrRDD = joinDF.rdd.filter(line => line(2) == 4).map(line => line.toString.substring(1, line.toString.length - 1).split(',')).map(line => (line(0).toLong, line(4).toLong))
+
+    lrDF = lrRDD.toDF("bcount", "tcount")
+    
+    featuresDF = assembler.transform(lrDF)
+
+    lrModel = lr.fit(featuresDF)
+    lrModel.write.overwrite().save("/user/vag273/rbda_proj/lr_apr")
+
+    trainSummary = lrModel.summary
+    println("R2: " + trainSummary.r2)
+
+    // Linear Regression - May
+    println("Regression - May")
+
+    lrRDD = joinDF.rdd.filter(line => line(2) == 5).map(line => line.toString.substring(1, line.toString.length - 1).split(',')).map(line => (line(0).toLong, line(4).toLong))
+
+    lrDF = lrRDD.toDF("bcount", "tcount")
+    
+    featuresDF = assembler.transform(lrDF)
+
+    lrModel = lr.fit(featuresDF)
+    lrModel.write.overwrite().save("/user/vag273/rbda_proj/lr_may")
+
+    trainSummary = lrModel.summary
+    println("R2: " + trainSummary.r2)
+
+    // Linear Regression - Jun
+    println("Regression - June")
+
+    lrRDD = joinDF.rdd.filter(line => line(2) == 6).map(line => line.toString.substring(1, line.toString.length - 1).split(',')).map(line => (line(0).toLong, line(4).toLong))
+
+    lrDF = lrRDD.toDF("bcount", "tcount")
+    
+    featuresDF = assembler.transform(lrDF)
+
+    lrModel = lr.fit(featuresDF)
+    lrModel.write.overwrite().save("/user/vag273/rbda_proj/lr_jun")
+
+    trainSummary = lrModel.summary
+    println("R2: " + trainSummary.r2)
+
+    // Linear Regression - Jul 
+    println("Regression - July")
+
+    lrRDD = joinDF.rdd.filter(line => line(2) == 7).map(line => line.toString.substring(1, line.toString.length - 1).split(',')).map(line => (line(0).toLong, line(4).toLong))
+
+    lrDF = lrRDD.toDF("bcount", "tcount")
+    
+    featuresDF = assembler.transform(lrDF)
+
+    lrModel = lr.fit(featuresDF)
+    lrModel.write.overwrite().save("/user/vag273/rbda_proj/lr_jul")
+
+    trainSummary = lrModel.summary
+    println("R2: " + trainSummary.r2)
+
+    // Linear Regression - Aug
+    println("Regression - August")
+
+    lrRDD = joinDF.rdd.filter(line => line(2) == 8).map(line => line.toString.substring(1, line.toString.length - 1).split(',')).map(line => (line(0).toLong, line(4).toLong))
+
+    lrDF = lrRDD.toDF("bcount", "tcount")
+    
+    featuresDF = assembler.transform(lrDF)
+
+    lrModel = lr.fit(featuresDF)
+    lrModel.write.overwrite().save("/user/vag273/rbda_proj/lr_aug")
+
+    trainSummary = lrModel.summary
+    println("R2: " + trainSummary.r2)
+
+    // Linear Regression - Sep
+    println("Regression - September")
+
+    lrRDD = joinDF.rdd.filter(line => line(2) == 9).map(line => line.toString.substring(1, line.toString.length - 1).split(',')).map(line => (line(0).toLong, line(4).toLong))
+
+    lrDF = lrRDD.toDF("bcount", "tcount")
+    
+    featuresDF = assembler.transform(lrDF)
+
+    lrModel = lr.fit(featuresDF)
+    lrModel.write.overwrite().save("/user/vag273/rbda_proj/lr_sep")
+
+    trainSummary = lrModel.summary
+    println("R2: " + trainSummary.r2)
+
+    // Linear Regression - Oct
+    println("Regression - October")
+
+    lrRDD = joinDF.rdd.filter(line => line(2) == 10).map(line => line.toString.substring(1, line.toString.length - 1).split(',')).map(line => (line(0).toLong, line(4).toLong))
+
+    lrDF = lrRDD.toDF("bcount", "tcount")
+    
+    featuresDF = assembler.transform(lrDF)
+
+    lrModel = lr.fit(featuresDF)
+    lrModel.write.overwrite().save("/user/vag273/rbda_proj/lr_oct")
+
+    trainSummary = lrModel.summary
+    println("R2: " + trainSummary.r2)
+
+    // Linear Regression - Nov
+    println("Regression - November")
+
+    lrRDD = joinDF.rdd.filter(line => line(2) == 11).map(line => line.toString.substring(1, line.toString.length - 1).split(',')).map(line => (line(0).toLong, line(4).toLong))
+
+    lrDF = lrRDD.toDF("bcount", "tcount")
+    
+    featuresDF = assembler.transform(lrDF)
+
+    lrModel = lr.fit(featuresDF)
+    lrModel.write.overwrite().save("/user/vag273/rbda_proj/lr_nov")
+
+    trainSummary = lrModel.summary
+    println("R2: " + trainSummary.r2)
+
+    // Linear Regression - Dec
+    println("Regression - December")
+
+    lrRDD = joinDF.rdd.filter(line => line(2) == 12).map(line => line.toString.substring(1, line.toString.length - 1).split(',')).map(line => (line(0).toLong, line(4).toLong))
+
+    lrDF = lrRDD.toDF("bcount", "tcount")
+    
+    featuresDF = assembler.transform(lrDF)
+
+    lrModel = lr.fit(featuresDF)
+    lrModel.write.overwrite().save("/user/vag273/rbda_proj/lr_dec")
+
+    trainSummary = lrModel.summary
     println("R2: " + trainSummary.r2)
   }
 }
