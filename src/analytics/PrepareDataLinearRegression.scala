@@ -24,12 +24,10 @@ object PrepareDataLinearRegression {
     val bDF = bCount.map(line => (line._1, line._2, line._3, line._4)).toDF(bHeader: _*)
     val castBDF = bDF.select(bDF("byear").cast(IntegerType).as("byear"), bDF("bmonth").cast(IntegerType).as("bmonth"), bDF("bzone"), bDF("bcount").cast(LongType).as("bcount"))
 
-    val t2011 = sc.textFile("/user/vag273/rbda_proj/taxi_2011")
-    val t2012 = sc.textFile("/user/vag273/rbda_proj/taxi_2012")
     val t2013 = sc.textFile("/user/vag273/rbda_proj/taxi_2013")
     val t2014 = sc.textFile("/user/vag273/rbda_proj/taxi_2014")
     val t2015 = sc.textFile("/user/vag273/rbda_proj/taxi_2015")
-    val tData = t2011.union(t2012).union(t2013).union(t2014).union(t2015)
+    val tData = t2013.union(t2014).union(t2015)
     val tSplit = tData.map(line => line.substring(1, line.length - 1)).map(line => line.split(','))
     val tZone = tSplit.map(line => (line(0) + '-' +  line(1) + '-' +  ((line(3).toDouble - 40.69715)/0.003).toInt + "_" + ((line(2).toDouble - (-74.022208))/0.003).toInt, 1))
     val tCount = tZone.reduceByKey(_ + _).map(line => (line._1.split('-')(0), line._1.split('-')(1), line._1.split('-')(2), line._2))
