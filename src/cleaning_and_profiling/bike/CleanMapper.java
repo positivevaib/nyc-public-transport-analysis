@@ -58,6 +58,20 @@ public class CleanMapper extends Mapper<LongWritable, Text, Text, Text> {
             int startGridCol = (int)((startLongitude - (-74.022208))/0.003);
             String startGridId = startGridRow + "_" + startGridCol;
 
+            double[][] coordinates = {{-73.953405, 40.771717, -73.939891, 40.784969, 1}, 
+                                        {-73.959942, 40.759847, -73.947947, 40.770242, 2},
+                                        {-73.984175, 40.719824, -73.97153, 40.734298, 3},
+                                        {-73.99556, 40.709716, -73.972686, 40.724192, 4},
+                                        {-74.018617, 40.716287, -74.00416, 40.726929, 5},
+                                        {-74.014514, 40.72693, -74.002003, 40.733034, 6}};
+
+             int subwayZone = 0;
+             for (int i = 0; i < coordinates.length; i++)
+                 if (startLatitude > coordinates[i][1] && startLatitude < coordinates[i][3] && startLongitude > coordinates[i][0] && startLongitude < coordinates[i][2]) {
+                     subwayZone = (int)coordinates[i][4];
+                     break;
+                 }
+
             String userType = line[12].replaceAll("\"", "").toLowerCase();
             if (userType.equals("subscriber"))
                 userType = "0";
@@ -75,7 +89,7 @@ public class CleanMapper extends Mapper<LongWritable, Text, Text, Text> {
                 doWrite = false;
 
             if (doWrite)
-                context.write(new Text(startYear + ""), new Text("placeholder" + "," + startYear + "," + startMonth + "," + startDay + "," + startHour + "," + stationId + "," + startLatitude + "," + startLongitude + "," + startGridId + "," + startHourBin));
+                context.write(new Text(startYear + ""), new Text("placeholder" + "," + startYear + "," + startMonth + "," + startDay + "," + startHour + "," + stationId + "," + startLatitude + "," + startLongitude + "," + startGridId + "," + startHourBin + "," + subwayZone));
         }
         catch(Exception e) {}
     }
