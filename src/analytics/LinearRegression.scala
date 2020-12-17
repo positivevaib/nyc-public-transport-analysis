@@ -144,7 +144,7 @@ object LinearRegression {
     // Linear Regression - Oct
     println("Regression - October")
 
-    lrRDF = baseDF.filter(baseDF("tmonth") === 10).drop("tmonth")
+    lrDF = baseDF.filter(baseDF("tmonth") === 10).drop("tmonth")
     
     featuresDF = assembler.transform(lrDF)
 
@@ -157,7 +157,7 @@ object LinearRegression {
     // Linear Regression - Nov
     println("Regression - November")
 
-    lrRDF = baseDF.filter(baseDF("tmonth") === 11).drop("tmonth")
+    lrDF = baseDF.filter(baseDF("tmonth") === 11).drop("tmonth")
     
     featuresDF = assembler.transform(lrDF)
 
@@ -170,7 +170,7 @@ object LinearRegression {
     // Linear Regression - Dec
     println("Regression - December")
 
-    lrRDF = baseDF.filter(baseDF("tmonth") === 12).drop("tmonth")
+    lrDF = baseDF.filter(baseDF("tmonth") === 12).drop("tmonth")
     
     featuresDF = assembler.transform(lrDF)
 
