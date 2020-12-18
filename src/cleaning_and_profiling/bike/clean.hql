@@ -12,3 +12,11 @@ insert overwrite table bike_counts_four_hour_bins select startyear, startmonth, 
 create table bike_counts_subway_zones (startyear int, startmonth int, starthourbin int, subwayzone int, count bigint);
 insert overwrite table bike_counts_subway_zones select startyear, startmonth, starthourbin, subwayzone, count(*) from bike_staging group by startyear, startmonth, starthourbin, subwayzone;
 
+-- Create table for taxi analysis
+create table bike_for_join_grids (year int, month int, zone string, count bigint);
+insert overwrite table bike_for_join_grids select startyear, startmonth, startgridid, count(*) from bike_staging group by startyear, startmonth, startgridid;
+
+-- Create table for subway analysis
+create table bike_east_west_staging (startyear int, startmonth int, gridid int);
+insert overwrite table bike_east_west_staging select startyear, startmonth, subwayzone from bike_staging;
+

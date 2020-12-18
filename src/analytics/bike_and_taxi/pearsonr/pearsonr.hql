@@ -1,6 +1,6 @@
 -- Create table with yearly totals for bike and taxi rides from 2014 to 2019
 create table bike_taxi_yearly_totals_2014_2019 (year int, bike_count bigint, taxi_count bigint);
-insert overwrite table bike_taxi_yearly_totals_2014_2019 select year, sum(bike), sum(taxi) from all_three where (year >= 2014 and year <= 2019) group by year;
+insert overwrite table bike_taxi_yearly_totals_2014_2019 select b_year, sum(bike_count), sum(taxi_count) from rp3261.bike_taxi_grids where (b_year >= 2014 and b_year <= 2019) group by b_year;
 
 -- Compute bike and taxi averages across 5 years from 2014 to 2019
 select avg(bike_count), avg(taxi_count) from bike_taxi_yearly_totals_2014_2019;
