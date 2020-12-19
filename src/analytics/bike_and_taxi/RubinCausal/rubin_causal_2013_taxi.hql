@@ -74,13 +74,3 @@ select t.month, t.taxi1-c.taxi1, t.taxi2-c.taxi2
 from avg_treatment_2013 t
 join avg_control_2013 c
 on t.month=c.month;
-
-select * from causal_effects_2013;
-
-select *
-from bike_taxi_grids
-where t_year is 2015 and b_year is null taxi_count>2000;
-
-select *
-from bike_taxi_grids
-where t_year is 2015 and b_year is not  null taxi_count>2000;
