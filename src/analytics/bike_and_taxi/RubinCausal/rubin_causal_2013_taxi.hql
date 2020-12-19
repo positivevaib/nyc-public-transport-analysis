@@ -6,8 +6,8 @@ select t_year, t_month, taxi_grid, taxi_count
 from bike_taxi_grids 
 where ((t_year=2012 and t_month>6) or t_year=2013 or t_year=2014 or (t_year=2015 and t_month<=6))
 and taxi_grid in 
-("7_5","7_4","14_12","16_9","17_6","2_2","18_16","19_18","2_3","20_18","20_21","21_6","21_7","22_8","9_8",
-"8_3","27_19","4_3","13_16","10_3","17_5","30_22","23_8","24_9","33_18","34_29","9_9","41_22","5_2","24_24");
+("7_5","7_4","14_12","16_9","17_6","2_2","18_16","19_18","2_3","20_18","20_21","21_6","21_7","22_8","9_8", -- treatment neighborhoods
+"8_3","27_19","4_3","13_16","10_3","17_5","30_22","23_8","24_9","33_18","34_29","9_9","41_22","5_2","24_24"); -- control neighborhoods
 
 -- make 3 tables from causal_2013 - for year1, year2, year3 
 create table if not exists causal_2013_year1 (month int, grid string, taxi bigint);
